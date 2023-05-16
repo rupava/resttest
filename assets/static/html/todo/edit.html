@@ -1,16 +1,12 @@
 {% extends 'html/blank.html' %}
 {% load static %}
 {% block body %}
-    <!-- <div class="container">
-        <h1>{{data}}</h1>
-        <ul>
-
-        </ul>
-    </div> -->
-    <div class="container border p-4">
-      <h1>{{ data.task_title }}</h1>
-      <hr></hr>
-      <span>{{ data.create_at }}</span>
+  <div class="container border p-4">
+    <h1>{{ data.task_title }}</h1>
+    <hr></hr>
+    <span>{{ data.create_at }}</span>
+    <form method="POST">
+      {% csrf_token %}
       <div class="mt-2">
         <ul>
           {% for tasks in dump%}
@@ -18,8 +14,19 @@
               <div>
                 <input type="text" class="task_input" value="{{tasks.task_name}}" id="task_{{tasks.id}}">
               </div>
-              <div>
-                <svg id="empty_{{tasks.id}}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="hide bi bi-asterisk" viewBox="0 0 16 16">
+              <div class="d-flex">
+                <select class="form-select mx-2" name="progress">
+                  <option value="2">Incomplete</option>
+                  <option value="1">In Progress</option>
+                  <option value="0">Complete</option>
+                </select>
+                <button name="delete" class="btn btn-danger"  type="button" onclick="deleteEntry({{tasks.id}})">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                  </svg>
+                </button>
+                <svg id="empty_{{tasks.id}}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="mx-2 hide bi bi-asterisk" viewBox="0 0 16 16">
                   <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
                 </svg>
               </div>
@@ -28,64 +35,75 @@
           {% endfor %}
         </ul>
       </div>
-      <!-- TEST STUFF -->
-      <!-- TEST STUFF -->
+    <!-- TEST STUFF -->
+    <!-- TEST STUFF -->
       <div class="d-flex justify-content-end align-items-center">
-        <button class="btn btn-success text-dark">
+        <!-- <button class="btn btn-success text-dark" id="updateBtn" disabled type="submit" name="update">
           Update
-        </button>
+        </button> -->
         <button class="btn btn-primary text-dark ms-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Add Task
         </button>
       </div>
-    </div>
-    <!-- MODAL -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <form method="POST">
-          {% csrf_token %}
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Task</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-floating mb-3">
-                  <input type="text" name="task_new" class="form-control"placeholder="Task">
-                  <label for="floatingInput">Task</label>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+  <!-- MODAL -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Task</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-floating mb-3">
+              <input type="text" name="task_new" class="form-control"placeholder="Task" required>
+              <label for="floatingInput">Task</label>
             </div>
           </div>
-        </form>
-        
-      </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="submit" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </form>
+      
     </div>
+  </div>
 
-    <!--  -->
-    <script>
-      let dump_data = []
-      {% for tasks in dump%}
-        const task_{{tasks.id}} = document.getElementById('task_{{tasks.id}}');
-        const empty_{{tasks.id}} = document.getElementById('empty_{{tasks.id}}');
+  <!--  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    
+    const updateBtn = document.getElementById('updateBtn');
 
-        task_{{tasks.id}}.addEventListener("keydown",function(){
-          console.log(task_{{tasks.id}}.value)
-          if( task_{{tasks.id}}.value  === "{{tasks.task_name}}")){
-            empty_{{tasks.id}}.classList.add("hide");
-            console.log("TEST EQUAL")
-          }
-          else{
-            empty_{{tasks.id}}.classList.remove("hide");
-            console.log("NOT Equal")
+    {% for tasks in dump%}
+      const task_{{tasks.id}} = document.getElementById('task_{{tasks.id}}');
+      const empty_{{tasks.id}} = document.getElementById('empty_{{tasks.id}}');
 
-          }
-        });
-      {% endfor%}
-    </script>
+      task_{{tasks.id}}.addEventListener("keyup",function(){
+        if( task_{{tasks.id}}.value  === "{{tasks.task_name}}"){
+          empty_{{tasks.id}}.classList.add("hide");
+          updateBtn.setAttribute('disabled','');
+        }
+        else{
+          empty_{{tasks.id}}.classList.remove("hide");
+          updateBtn.removeAttribute('disabled','');
+        }
+      });
+    {% endfor%}
 
-    {% endblock %}
+
+    function deleteEntry(pk_num){
+
+      console.log(pk_num);
+      $.post({% url 'edit' %},{
+        'delete':pk_num
+      });
+
+    }
+  </script>
+
+ {% endblock %}

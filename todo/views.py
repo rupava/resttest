@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
 from .models import *
@@ -45,19 +45,43 @@ def todo_index(request):
 @login_required(login_url='/login/')
 def todo_edit(request):
     slug = request.GET["pk"]
+    data = Tasks()
 
-    if request.method == 'POST':
+    if request.method == 'POST' and 'submit' in request.POST:
         # print(list(request.POST.items()))
-        task_name = request.POST.get('task_update')
-        status_code = request.POST.get('status_code')
-        description = request.POST.get('description')
-        
         data = Tasks()
-        data.task_list = request.user
+
+        task_name = request.POST.get('task_new')        
+        status_code = 2
+        # description = request.POST.get('description')
+        data.task_list = Task_List.objects.get(id = slug)
         data.task_name = task_name
-        data.description = description
+        # data.description = description
         data.status_code = status_code
         data.save()
+        return redirect('/todo/edit/?pk='+slug)
+    
+    if request.method == 'POST' and 'update' in request.POST:
+        data = Tasks()
+
+        data.task_list = Task_List.objects.get(id = slug)
+
+        data.status_code = request.POST.get('progress')
+        
+        # Tasks.objects.filter(pk=some_value).update(field1='some value')
+
+
+        return redirect('/todo/edit/?pk='+slug)
+
+    # if request.method == 'POST' and request.POST.get('delete') == 'yes':
+    #     print("asdkjajsdkasbdjsdbkadjsbadkjasbkasb;")
+    #     deleteObj = Tasks.objects.get(id=request.POST.get('task_id'))
+    #     deleteObj.delete()
+    #     return redirect('/todo/edit/?pk='+slug)
+
+    if request.method == 'POST':
+        print(list(request.POST.items()))
+
 
     try:
         task_id = Task_List.objects.get(id = slug, user = request.user)

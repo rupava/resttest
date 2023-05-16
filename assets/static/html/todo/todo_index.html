@@ -1,0 +1,65 @@
+{% extends 'html/blank.html' %}
+{% load static %}
+{% block body %}
+
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">MyToDo</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Lists</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container border p-4">
+    <ul>
+      {% for i in data %}
+      <a class="list_anchor" href="edit/?pk={{i.id}}">
+        <li class="d-flex justify-content-between p-3 li_hover rounded-2">
+          <span>{{ i.task_title }}</span>
+          <span>{{ i.create_at }}</span>
+        </li>
+      </a>
+      <hr></hr>
+      {% endfor %}
+    </ul>
+    <div class="d-flex justify-content-end align-items-center">
+      <button class="btn btn-success text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Add New
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add New List</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating">
+            <input type="text" name="list_headding" class="form-control" id="floatingPassword" placeholder="List Headding">
+            <label for="floatingPassword">List Headding</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" name="submit" class="btn btn-primary">Create List</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

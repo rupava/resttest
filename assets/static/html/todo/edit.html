@@ -1,0 +1,28 @@
+{% extends 'html/blank.html' %}
+{% load static %}
+{% block body %}
+    <!-- <div class="container">
+        <h1>{{data}}</h1>
+        <ul>
+
+        </ul>
+    </div> -->
+    <div class="container border p-4">
+      <h1>{{ data.task_title }}</h1>
+      <hr></hr>
+      <span>{{ data.create_at }}</span>
+      <div class="mt-2">
+        <ul>
+          {{data.task_list_id}}
+        </ul>
+      </div>
+      <!-- TEST STUFF -->
+
+      <!-- TEST STUFF -->
+      <div class="d-flex justify-content-end align-items-center">
+        <button class="btn btn-success text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Update
+        </button>
+      </div>
+    </div>
+{% endblock %}

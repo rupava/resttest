@@ -1,0 +1,8 @@
+resttest_venv
+*.pyc
+*.pyo
+*.pyd
+*.py~
+**/__pycache__/
+*.pyc
+*.egg-info/

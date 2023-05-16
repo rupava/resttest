@@ -1,0 +1,13 @@
+ul{
+    list-style: none;
+}
+
+li:hover{
+    cursor: pointer;
+    background-color: #cccc;
+}
+
+.list_anchor{
+    color: #222;
+    text-decoration: none;;
+}

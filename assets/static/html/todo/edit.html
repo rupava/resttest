@@ -14,8 +14,15 @@
       <div class="mt-2">
         <ul>
           {% for tasks in dump%}
-            <li class=" p-4 rounded-3 mt-2">
-              <input type="text" class="task_input" value="{{tasks.task_name}}">
+            <li class=" p-4 rounded-3 mt-2 d-flex justify-content-between align-items-center">
+              <div>
+                <input type="text" class="task_input" value="{{tasks.task_name}}" id="task_{{tasks.id}}">
+              </div>
+              <div>
+                <svg id="empty_{{tasks.id}}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="hide bi bi-asterisk" viewBox="0 0 16 16">
+                  <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                </svg>
+              </div>
             </li>
             <hr></hr>
           {% endfor %}
@@ -24,9 +31,58 @@
       <!-- TEST STUFF -->
       <!-- TEST STUFF -->
       <div class="d-flex justify-content-end align-items-center">
-        <button class="btn btn-success text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button class="btn btn-success text-dark">
           Update
+        </button>
+        <button class="btn btn-primary text-dark ms-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Add Task
         </button>
       </div>
     </div>
-{% endblock %}
+    <!-- MODAL -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Task</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST">
+              {% csrf_token%}
+              <div class="form-floating mb-3">
+                <input type="text" name="task_new" class="form-control"placeholder="Task">
+                <label for="floatingInput">Task</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  -->
+    <script>
+      let dump_data = []
+      {% for tasks in dump%}
+        const task_{{tasks.id}} = document.getElementById('task_{{tasks.id}}');
+        const empty_{{tasks.id}} = document.getElementById('empty_{{tasks.id}}');
+
+        task_{{tasks.id}}.addEventListener("keydown",function(){
+          if(task_{{tasks.id}}.value === "{{tasks.task_name}}")){
+            empty_{{tasks.id}}.classList.add("hide");
+            console.log("TEST EQUAL")
+          }
+          else{
+            empty_{{tasks.id}}.classList.remove("hide");
+            console.log("NOT Equal")
+
+          }
+        });
+      {% endfor%}
+    </script>
+
+    {% endblock %}

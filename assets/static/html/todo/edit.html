@@ -13,11 +13,15 @@
       <span>{{ data.create_at }}</span>
       <div class="mt-2">
         <ul>
-          {{data.task_list_id}}
+          {% for tasks in dump%}
+            <li class=" p-4 rounded-3 mt-2">
+              <input type="text" class="task_input" value="{{tasks.task_name}}">
+            </li>
+            <hr></hr>
+          {% endfor %}
         </ul>
       </div>
       <!-- TEST STUFF -->
-
       <!-- TEST STUFF -->
       <div class="d-flex justify-content-end align-items-center">
         <button class="btn btn-success text-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">

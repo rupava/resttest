@@ -49,10 +49,11 @@ def todo_edit(request):
     task_id = Task_List.objects.get(id = slug, user = request.user)
 
     taskObj = Tasks.objects.filter(task_list = task_id.id) 
-    print("---->",taskObj)
+
     if task_id != "" or task_id != "null":
         context = {
-            'data':task_id
+            'data':task_id,
+            'dump':taskObj
         }
         return render(request, 'html/todo/edit.html', context)
     

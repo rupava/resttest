@@ -4,10 +4,17 @@ ul{
 
 li:hover{
     cursor: pointer;
-    background-color: #cccc;
+    background-color: #cccccc;
 }
 
 .list_anchor{
     color: #222;
     text-decoration: none;;
+}
+
+.task_input{
+    background-color: inherit;
+    border: none;
+    outline: none;
+    width: 40vw;
 }

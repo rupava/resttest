@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
 from .models import *
+from django.http import Http404
 
 @login_required(login_url='/login/')
 def todo_index(request):
@@ -46,15 +47,17 @@ def todo_edit(request):
 
     slug = request.GET["pk"]
 
-    task_id = Task_List.objects.get(id = slug, user = request.user)
-
-    taskObj = Tasks.objects.filter(task_list = task_id.id) 
-
-    if task_id != "" or task_id != "null":
+    try:
+        task_id = Task_List.objects.get(id = slug, user = request.user)
+        taskObj = Tasks.objects.filter(task_list = task_id.id)
+    except Task_List.DoesNotExist:
+        raise Http404("Given query not found....")
+    else:        
         context = {
             'data':task_id,
-            'dump':taskObj
+            'dump':taskObj,
         }
-        return render(request, 'html/todo/edit.html', context)
+
+    return render(request, 'html/todo/edit.html', context)
     
-    raise PermissionDenied()
+    # raise PermissionDenied()

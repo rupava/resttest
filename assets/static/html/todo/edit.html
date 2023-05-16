@@ -42,25 +42,27 @@
     <!-- MODAL -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Task</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Add Task</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating mb-3">
+                  <input type="text" name="task_new" class="form-control"placeholder="Task">
+                  <label for="floatingInput">Task</label>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
           </div>
-          <div class="modal-body">
-            <form method="POST">
-              {% csrf_token%}
-              <div class="form-floating mb-3">
-                <input type="text" name="task_new" class="form-control"placeholder="Task">
-                <label for="floatingInput">Task</label>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
-          </div>
-        </div>
+        </form>
+        
       </div>
     </div>
 
@@ -72,7 +74,8 @@
         const empty_{{tasks.id}} = document.getElementById('empty_{{tasks.id}}');
 
         task_{{tasks.id}}.addEventListener("keydown",function(){
-          if(task_{{tasks.id}}.value === "{{tasks.task_name}}")){
+          console.log(task_{{tasks.id}}.value)
+          if( task_{{tasks.id}}.value  === "{{tasks.task_name}}")){
             empty_{{tasks.id}}.classList.add("hide");
             console.log("TEST EQUAL")
           }
